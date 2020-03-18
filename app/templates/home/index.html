@@ -1,0 +1,112 @@
+{% extends 'home/layout.html' %}
+{% import 'ui/home_page.html' as pg %}
+
+{% block content %}
+<!--热门电影-->
+<section id="hotmovie" style="margin-top:76px">
+    <div class="container">
+        <div class="row wow fadeInRight" data-wow-delay="0.6s">
+            <div class="row">
+                <iframe class="wow fadeIn" width="100%" height="375px" frameborder=0 scrolling=no
+                        src="{{url_for('home.animation')}}"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+<!--热门电影-->
+<!--电影列表-->
+<section id="movielist">
+    <div class="container">
+        <div class="row wow fadeIn" data-wow-delay="0.6s">
+            <div class="col-md-12 table-responsive">
+                <table class="table text-left table-bordered" id="movietags">
+                    <tr>
+                        <td style="width:10%;">电影标签</td>
+                        <td style="width:90%;">
+                            {% for v in tags %}
+                            <a href="{{ url_for('home.index', page=1) }}?tag_id={{ v.id }}&star_num={{ selected['star_num'] }}&time_year={{ selected['time_year'] }}&play_num={{ selected['play_num'] }}&comment_num={{ selected['comment_num'] }}"
+                               class="label label-info"><span
+                                    class="glyphicon glyphicon-tag"></span>&nbsp;{{ v.name }}</a>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>电影星级</td>
+                        <td>
+                            {% for v in stars %}
+                            <a href="{{ url_for('home.index', page=1) }}?tag_id={{ selected['tag_id'] }}&star_num={{ v.num }}&time_year={{ selected['time_year'] }}&play_num={{ selected['play_num'] }}&comment_num={{ selected['comment_num'] }}"
+                               class="label label-warning"><span class="glyphicon glyphicon-star"></span>&nbsp;{{ v.info
+                                }}</a>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>上映时间</td>
+                        <td>
+                            <a class="label label-default"><span class="glyphicon glyphicon-time"></span>&nbsp;最近</span>
+                            </a>
+                            &nbsp; {% for v in years %}
+                            <a href="{{ url_for('home.index', page=1) }}?tag_id={{ selected['tag_id'] }}&star_num={{ selected['star_num'] }}&time_year={{ v }}&play_num={{ selected['play_num'] }}&comment_num={{ selected['comment_num'] }}"
+                               class="label label-default"><span
+                                    class="glyphicon glyphicon-time"></span>&nbsp;{{ v }}</span></a>
+                            &nbsp;{% endfor %}
+                            <a class="label label-default"><span class="glyphicon glyphicon-time"></span>&nbsp;更早</span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>评论数量</td>
+                        <td>
+                            <a class="label label-success"
+                               href="{{ url_for('home.index', page=1) }}?tag_id={{ selected['tag_id'] }}&star_num={{ selected['star_num'] }}&time_year={{ selected['time_year'] }}&play_num={{ selected['play_num'] }}&comment_num=1"><span
+                                    class="glyphicon glyphicon-arrow-down"> 从高到底</span></a>
+
+                            <a class="label label-danger"
+                               href="{{ url_for('home.index', page=1) }}?tag_id={{ selected['tag_id'] }}&star_num={{ selected['star_num'] }}&time_year={{ selected['time_year'] }}&play_num={{ selected['play_num'] }}&comment_num=0"><span
+                                    class="glyphicon glyphicon-arrow-up"> 从低到高</span></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>播放数量</td>
+                        <td>
+                            <a href="{{ url_for('home.index', page=1) }}?tag_id={{ selected['tag_id'] }}&star_num={{ selected['star_num'] }}&time_year={{ selected['time_year'] }}&play_num=1&comment_num={{ selected['comment_num'] }}"
+                               class="label label-success"><span class="glyphicon glyphicon-arrow-down"></span>&nbsp;从高到底</span>
+                            </a>
+                            &nbsp;
+                            <a href="{{ url_for('home.index', page=1) }}?tag_id={{ selected['tag_id'] }}&star_num={{ selected['star_num'] }}&time_year={{ selected['time_year'] }}&play_num=0&comment_num={{ selected['comment_num'] }}"
+                               class="label label-danger"><span
+                                    class="glyphicon glyphicon-arrow-up"></span>&nbsp;从低到高</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {% for v in page_data.items %}
+            <div class="col-md-3">
+                <div class="movielist text-center">
+                    <!--<img data-original="holder.js/262x166"
+                             class="img-responsive lazy center-block" alt="">-->
+                    <img src="{{ url_for('static', filename='uploads/' + v.logo) }}" class="img-responsive center-block"
+                         alt="">
+                    <div class="text-left" style="margin-left:auto;margin-right:auto;width:210px;">
+                        <span style="color:#999;font-style: italic;">{{ v.title }}</span><br>
+                        <div>
+                            {% for i in range(v.star) %}
+                            <span class="glyphicon glyphicon-star" style="color:#FFD119"></span>
+                            {% endfor %}
+                            {% for i in range(5 - v.star) %}
+                            <span class="glyphicon glyphicon-star-empty" style="color:#FFD119"></span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <a href="{{ url_for('home.play', id=v.id, page=1) }}" class="btn btn-primary" target="_blank" role="button"><span
+                            class="glyphicon glyphicon-play"></span>&nbsp;播放</a>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="col-md-12">
+                {{pg.page(page_data, 'home.index')}}
+            </div>
+        </div>
+    </div>
+</section>
+<!--电影列表-->
+{% endblock %}
